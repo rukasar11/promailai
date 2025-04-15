@@ -1,0 +1,35 @@
+<!-- <div class="chat-box">
+    <div *ngFor="let msg of messages">
+      <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="messageText" placeholder="Type your message..." />
+      <button (click)="send()">Send</button>
+    </div>
+  </div> -->
+
+  <!-- <div class="chat-box">
+    <div *ngFor="let msg of messages">
+      <div [ngClass]="{ 'bot': msg.sender === 'SmartBot 🤖', 'user': msg.sender !== 'SmartBot 🤖' }">
+        <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+      </div>
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="messageText" placeholder="Type your message..." />
+      <button (click)="send()">Send</button>
+    </div>
+  </div> -->
+  
+  <div class="chat-box">
+    <div *ngFor="let msg of messages" [innerHTML]="msg.text" [ngClass]="{ 'bot': msg.sender === 'SmartBot 🤖', 'user': msg.sender !== 'SmartBot 🤖' }">
+      <strong>{{ msg.sender }}:</strong>
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="messageText" placeholder="Type your message..." />
+      <button (click)="send()">Send</button>
+    </div>
+  </div>
+  

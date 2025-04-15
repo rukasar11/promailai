@@ -1,0 +1,17 @@
+<div *ngIf="message" style="padding: 20px;">
+    <h2>{{ getSubject() }}</h2>
+    <p><strong>From:</strong> {{ getFrom() }}</p>
+    <hr />
+    <div [innerHTML]="getBody()"></div>
+    <div style="margin-top: 20px;">
+        <button (click)="translateEmail()" [disabled]="translating">
+          {{ translating ? 'Translating...' : 'Translate to English' }}
+        </button>
+      </div>
+    
+      <!-- Translated Result -->
+      <div *ngIf="translatedBody" style="margin-top: 20px; background: #f1f1f1; padding: 10px; border-radius: 6px;">
+        <h4>Translated:</h4>
+        <div>{{ translatedBody }}</div>
+      </div>
+</div>
