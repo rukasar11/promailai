@@ -112,7 +112,10 @@ export class GmailService {
     const labelMap: any = {
       CATEGORY_PRIMARY: ['INBOX', 'CATEGORY_PERSONAL'],
       CATEGORY_SOCIAL: ['CATEGORY_SOCIAL'],
-      CATEGORY_PROMOTIONS: ['CATEGORY_PROMOTIONS']
+      CATEGORY_PROMOTIONS: ['CATEGORY_PROMOTIONS'],
+      CATEGORY_SENT: ['SENT'],
+      CATEGORY_TRASH: ['TRASH'],
+      CATEGORY_ARCHIVED: ['INBOX']
     };
 
     const labelIds = labelMap[label] || ['INBOX'];  // fallback
