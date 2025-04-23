@@ -1,25 +1,3 @@
-<!-- <h2>Inbox</h2>
-
-<button (click)="logout()" style="margin-bottom: 10px;">Logout</button>
-
-<div style="margin-bottom: 20px;">
-  <button (click)="loadMessages('CATEGORY_PRIMARY')" [disabled]="currentTab === 'CATEGORY_PRIMARY'">Primary</button>
-  <button (click)="loadMessages('CATEGORY_SOCIAL')" [disabled]="currentTab === 'CATEGORY_SOCIAL'">Social</button>
-  <button (click)="loadMessages('CATEGORY_PROMOTIONS')" [disabled]="currentTab === 'CATEGORY_PROMOTIONS'">Promotions</button>
-</div>
-
-<ul>
-  <li *ngFor="let message of messages" (click)="selectMessage(message)" style="cursor: pointer; margin-bottom: 10px;">
-    <strong>{{ getSubject(message) }}</strong>
-  </li>
-</ul>
-
-<div *ngIf="selectedMessage" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
-  <h3>{{ getSubject(selectedMessage) }}</h3>
-  <div [innerHTML]="getBody(selectedMessage)"></div>
-</div> -->
-
-<!--original-->
 <!-- <h2>Gmail Clone</h2>
 
 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
@@ -27,6 +5,9 @@
     <button (click)="loadMessages('CATEGORY_PRIMARY')" [disabled]="currentTab === 'CATEGORY_PRIMARY'">Primary</button>
     <button (click)="loadMessages('CATEGORY_SOCIAL')" [disabled]="currentTab === 'CATEGORY_SOCIAL'">Social</button>
     <button (click)="loadMessages('CATEGORY_PROMOTIONS')" [disabled]="currentTab === 'CATEGORY_PROMOTIONS'">Promotions</button>
+    <button (click)="loadMessages('CATEGORY_SENT')" [disabled]="currentTab === 'CATEGORY_SENT'">Sent</button>
+    <button (click)="loadMessages('CATEGORY_ARCHIVED')" [disabled]="currentTab === 'CATEGORY_ARCHIVED'">Archived</button>
+    <button (click)="loadMessages('CATEGORY_TRASH')" [disabled]="currentTab === 'CATEGORY_TRASH'">Trash</button>
   </div>
 
   <div>
@@ -37,7 +18,7 @@
     </button>
     
   </div>
-</div> -->
+</div>  -->
 
 <!-- Compose Mail Form -->
 <!-- <div *ngIf="composeMode" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
@@ -130,6 +111,27 @@
                 (click)="loadMessages('CATEGORY_PROMOTIONS')">
           <span class="material-icons">local_offer</span>
           <span>Promotions</span>
+        </button>
+
+        <button class="tab-button" 
+        [class.active]="currentTab === 'CATEGORY_SENT'"
+        (click)="loadMessages('CATEGORY_SENT')"> 
+        <span class="material-icons">Sent</span>
+        <span>Sent</span>
+        </button>
+
+        <button class="tab-button" 
+        [class.active]="currentTab === 'CATEGORY_ARCHIVED'"
+        (click)="loadMessages('CATEGORY_ARCHIVED')"> 
+        <span class="material-icons">Archive</span>
+        <span>Archived</span>
+        </button>
+
+        <button class="tab-button" 
+        [class.active]="currentTab === 'CATEGORY_TRASH'"
+        (click)="loadMessages('CATEGORY_TRASH')">
+        <span class="material-icons">Trash</span>
+        <span>Trash</span>
         </button>
         
         </nav>
