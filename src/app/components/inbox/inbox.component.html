@@ -19,8 +19,8 @@
   <div [innerHTML]="getBody(selectedMessage)"></div>
 </div> -->
 
-
-<h2>Gmail Clone</h2>
+<!--original-->
+<!-- <h2>Gmail Clone</h2>
 
 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
   <div>
@@ -37,10 +37,10 @@
     </button>
     
   </div>
-</div>
+</div> -->
 
 <!-- Compose Mail Form -->
-<div *ngIf="composeMode" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+<!-- <div *ngIf="composeMode" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
   <h3>Compose Mail</h3>
   <form (submit)="sendMail($event)">
     <label>To:</label><br />
@@ -52,16 +52,19 @@
     <button type="submit">Send</button>
     <button type="button" (click)="composeMode = false">Cancel</button>
   </form>
-</div>
+</div> -->
 
 <!-- Message List -->
-<ul>
+
+<!-- <ul> --> <!--this should be uncommented-->
   <!-- <li *ngFor="let message of messages" (click)="selectMessage(message)" style="cursor: pointer; margin-bottom: 10px;">
     <strong>{{ getSubject(message) }}</strong><br />
     <small>From: {{ getFrom(message) }}</small><br />
     <span [innerHTML]="getSnippet(message)"></span>
   </li> -->
-  <li *ngFor="let message of messages" 
+
+
+  <!-- <li *ngFor="let message of messages" 
     [routerLink]="['/email', message.id]"
     style="cursor: pointer; margin-bottom: 10px;">
   <strong>{{ getSubject(message) }}</strong><br />
@@ -73,14 +76,161 @@
   <button (click)="loadPreviousPage()" [disabled]="previousPageTokens.length === 0">Previous</button>
   <span>Page: {{ pageIndex + 1 }}</span>
   <button (click)="loadNextPage()" [disabled]="!nextPageToken">Next</button>
-</div>
+</div> -->
 
 <!-- Selected Message -->
-<div *ngIf="selectedMessage" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
+<!-- <div *ngIf="selectedMessage" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
   <h3>{{ getSubject(selectedMessage) }}</h3>
   <p><strong>From:</strong> {{ getFrom(selectedMessage) }}</p>
   <div [innerHTML]="getBody(selectedMessage)"></div>
   <button (click)="replyToMessage()">Reply</button>
   <button (click)="deleteMessage()">Delete</button>
   <button (click)="archiveMessage()">Archive</button>
+</div> -->
+
+
+
+
+
+
+<!--updated-->
+<div class="gmail-container">
+  <!-- Header Section -->
+  <header class="header">
+    <div class="logo"><b>ProMail</b><span class="ai-text"><b>AI</b></span></div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search mail">
+      <button class="search-button">🔍</button>
+    </div>
+    <div class="user-actions">
+      <button class="compose-button" (click)="openCompose()">Compose</button>
+      <button class="logout-button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="category-tabs">
+        <button class="tab-button" 
+                [class.active]="currentTab === 'CATEGORY_PRIMARY'"
+                (click)="loadMessages('CATEGORY_PRIMARY')">
+          <span class="material-icons">inbox</span>
+          <span>Primary</span>
+        </button>
+        <button class="tab-button" 
+                [class.active]="currentTab === 'CATEGORY_SOCIAL'"
+                (click)="loadMessages('CATEGORY_SOCIAL')">
+          <span class="material-icons">people</span>
+          <span>Social</span>
+        </button>
+        <button class="tab-button" 
+                [class.active]="currentTab === 'CATEGORY_PROMOTIONS'"
+                (click)="loadMessages('CATEGORY_PROMOTIONS')">
+          <span class="material-icons">local_offer</span>
+          <span>Promotions</span>
+        </button>
+        
+        </nav>
+      
+    </aside>
+
+    <!-- Email List -->
+    <section class="email-list">
+      <!-- Compose Mail Form -->
+      <div *ngIf="composeMode" class="compose-modal">
+        <div class="compose-header">
+          <h3>New Message</h3>
+          <button class="close-button" (click)="composeMode = false">×</button>
+        </div>
+        <form (submit)="sendMail($event)" class="compose-form">
+          <div class="form-group">
+            <input type="email" [(ngModel)]="composeData.to" name="to" placeholder="To" required />
+          </div>
+          <div class="form-group">
+            <input type="text" [(ngModel)]="composeData.subject" name="subject" placeholder="Subject" />
+          </div>
+          <div class="form-group">
+            <textarea [(ngModel)]="composeData.body" name="body" rows="10"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="send-button">Send</button>
+            <button type="button" class="cancel-button" (click)="composeMode = false">Discard</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Message List -->
+      <div class="email-items">
+        <div *ngFor="let message of messages" 
+             class="email-item"
+             [class.unread]="!message.isRead"
+             [class.seen]="message.isRead"
+             [class.selected]="selectedMessage?.id === message.id"
+             (click)="markAsRead(message)">
+          <div class="email-sender">{{ getFrom(message) }}</div>
+          <div class="email-content">
+            <div class="email-subject">{{ getSubject(message) }}</div>
+            <div class="email-preview" [innerHTML]="getSnippet(message)"></div>
+          </div>
+          <div class="email-time">{{ getDate(message) | date:'shortTime' }}</div>
+          <div class="seen-indicator">Seen</div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="page-button" 
+                (click)="loadPreviousPage()" 
+                [disabled]="previousPageTokens.length === 0">
+          Previous
+        </button>
+        <span class="page-info">Page {{ pageIndex + 1 }}</span>
+        <button class="page-button" 
+                (click)="loadNextPage()" 
+                [disabled]="!nextPageToken">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <!-- Email Detail View -->
+    <section *ngIf="selectedMessage" class="email-detail">
+      <div class="email-header">
+        <h2 class="email-subject">{{ getSubject(selectedMessage) }}</h2>
+        <div class="email-meta">
+          <span class="sender">{{ getFrom(selectedMessage) }}</span>
+          <span class="time">{{ getDate(selectedMessage) | date:'medium' }}</span>
+        </div>
+      </div>
+      <div class="email-body" [innerHTML]="getBody(selectedMessage)"></div>
+      
+      <!-- Translation Section -->
+      <div class="translation-section">
+        <button class="action-button translate" 
+                (click)="translateEmail()" 
+                [disabled]="translating">
+          {{ translating ? 'Translating...' : 'Translate to English' }}
+        </button>
+        
+        <div *ngIf="translatedBody" class="translated-content">
+          <h4>Translated:</h4>
+          <div [innerHTML]="translatedBody"></div>
+        </div>
+      </div>
+      
+      <div class="email-actions">
+        <button class="action-button reply" (click)="replyToMessage()">Reply</button>
+        <button class="action-button delete" (click)="deleteMessage()">Delete</button>
+        <button class="action-button archive" (click)="archiveMessage()">Archive</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Floating Chat Button -->
+  <button class="chat-button" (click)="openChat()">
+    <span class="chat-icon">💬</span>
+    <span class="chat-label">Chat</span>
+  </button>
 </div>

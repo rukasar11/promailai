@@ -1,5 +1,44 @@
-<h2>Compose</h2>
+<!--original-->
+
+<!-- <h2>Compose</h2>
 <input [(ngModel)]="to" placeholder="To"><br>
 <input [(ngModel)]="subject" placeholder="Subject"><br>
 <textarea [(ngModel)]="body" rows="10" placeholder="Body"></textarea><br>
-<button (click)="sendEmail()">Send</button>
+<button (click)="sendEmail()">Send</button> -->
+
+
+
+<!--updated-->
+
+<div class="compose-container">
+    <div class="compose-header">
+      <h2>New Message</h2>
+      <button class="close-btn" (click)="closeCompose()">×</button>
+    </div>
+    
+    <div class="compose-form">
+      <div class="form-group">
+        <label for="to">To</label>
+        <input id="to" [(ngModel)]="to" placeholder="recipient@example.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input id="subject" [(ngModel)]="subject" placeholder="Enter subject">
+      </div>
+      
+      <div class="form-group body-group">
+        <textarea [(ngModel)]="body" rows="10" placeholder="Compose your message here..."></textarea>
+      </div>
+      
+      <div class="compose-actions">
+        <button class="send-btn" (click)="sendEmail()">
+          <span>Send</span>
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+          </svg>
+        </button>
+        <button class="discard-btn" (click)="discardDraft()">Discard</button>
+      </div>
+    </div>
+  </div>

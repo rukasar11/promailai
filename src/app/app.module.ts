@@ -1,3 +1,5 @@
+//original
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -8,9 +10,11 @@ import { InboxComponent } from './components/inbox/inbox.component';
 // import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';//changes done here
+
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, InboxComponent],
+  declarations: [AppComponent, LoginComponent, InboxComponent, LandingPageComponent],// changes done here[andingPageComponent]
   imports: [
     BrowserModule, 
     AppRoutingModule,
@@ -22,3 +26,8 @@ import { FormsModule } from '@angular/forms';
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+
+
+
+

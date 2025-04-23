@@ -1,5 +1,150 @@
-<div class="login">
+<!-- <div class="login">
     <h1>Login with Google</h1>
     <div id="google-signin-btn"></div>
 </div>
+   -->
+
   
+<!-- 
+ login.component.html
+<div class="login-container">
+  <div class="login-background">
+    <div class="floating-shapes">
+      <div class="shape circle"></div>
+      <div class="shape triangle"></div>
+      <div class="shape square"></div>
+    </div>
+  </div>
+  
+  <div class="login-content">
+    <div class="app-header">
+      <div class="app-logo">
+        <svg class="animated-email" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path class="envelope" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          <path class="paper-plane" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" style="opacity:0"/>
+        </svg>
+      </div>
+      <h1 class="app-title">Welcome to ProMailAI</h1>
+      <p class="app-subtitle">Your intelligent email assistant</p>
+    </div>
+    
+    Your original login div - unchanged
+    <div class="login">
+      <h1>Login with Google</h1>
+      <div id="google-signin-btn"></div>
+    </div>
+    
+    <div class="login-footer">
+      <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      <p class="support-link">Need help? <a href="#">Contact Support</a></p>
+    </div>
+  </div>
+</div> -->
+
+
+<!-- login.component.html -->
+<div class="login-container">
+  <!-- Professional Header (visible when logged in) -->
+  <header class="main-header">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </div>
+        <span class="logo-text">ProMailAI</span>
+      </div>
+      <div class="navbar-links">
+        <a href="#" class="nav-link">Features</a>
+        
+        <a href="#" class="nav-link">Support</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Animated Background -->
+  <div class="login-background">
+    <div class="floating-shapes">
+      <div class="shape circle"></div>
+      <div class="shape triangle"></div>
+      <div class="shape square"></div>
+      <div class="shape wave"></div>
+      <div class="shape diamond"></div>
+    </div>
+    <div class="particles">
+      <div class="particle" *ngFor="let particle of particles"></div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="login-content">
+    <div class="app-header">
+      <div class="app-logo">
+        <svg class="animated-email" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path class="envelope" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          <path class="paper-plane" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" style="opacity:0"/>
+        </svg>
+      </div>
+      <h1 class="app-title">Welcome to ProMailAI</h1>
+      <p class="app-subtitle">Your intelligent email assistant</p>
+    </div>
+    
+    <div class="login">
+      <h1>Login with Google</h1>
+      <div id="google-signin-btn"></div>
+      <div class="divider">
+        <span class="divider-line"></span>
+        <!-- <span class="divider-text">or</span> -->
+        <span class="divider-line"></span>
+      </div>
+      <!-- <div class="email-login">
+        <input type="email" placeholder="Enter your email" class="email-input">
+        <button class="continue-btn">Continue</button>
+      </div> -->
+    </div>
+    
+    <div class="login-footer">
+      <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      <p class="support-link">Need help? <a href="#">Contact Support</a></p>
+    </div>
+  </div>
+
+  <!-- Professional Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Product</h3>
+        <a href="#">Features</a>
+        <!-- <a href="#">Pricing</a> -->
+        <a href="#">Integrations</a>
+      </div>
+      <div class="footer-section">
+        <h3>Company</h3>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-section">
+        <h3>Resources</h3>
+        <a href="#">Help Center</a>
+        <a href="#">API Docs</a>
+        <a href="#">Community</a>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 ProMailAI. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </footer>
+</div>
