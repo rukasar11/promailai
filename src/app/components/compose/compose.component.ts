@@ -51,7 +51,9 @@ export class ComposeComponent {
   body = '';
   isSending = false;
   error: string | null = null;
-
+  inReplyTo?: string;
+  threadId?: string;
+  
   constructor(
     public dialogRef: MatDialogRef<ComposeComponent>,
     private gmailService: GmailService,
@@ -75,7 +77,13 @@ export class ComposeComponent {
     this.error = null;
 
     try {
-      await this.gmailService.sendEmail(this.to, this.subject, this.body);
+      await this.gmailService.sendEmail(
+        this.to, 
+        this.subject, 
+        this.body,
+        this.inReplyTo || undefined,
+        this.threadId || undefined
+      );
       this.dialogRef.close({ success: true });
     } catch (err) {
       console.error('Error sending email:', err);

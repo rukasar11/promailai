@@ -1,89 +1,14 @@
-<!-- <h2>Gmail Clone</h2>
-
-<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-  <div>
-    <button (click)="loadMessages('CATEGORY_PRIMARY')" [disabled]="currentTab === 'CATEGORY_PRIMARY'">Primary</button>
-    <button (click)="loadMessages('CATEGORY_SOCIAL')" [disabled]="currentTab === 'CATEGORY_SOCIAL'">Social</button>
-    <button (click)="loadMessages('CATEGORY_PROMOTIONS')" [disabled]="currentTab === 'CATEGORY_PROMOTIONS'">Promotions</button>
-    <button (click)="loadMessages('CATEGORY_SENT')" [disabled]="currentTab === 'CATEGORY_SENT'">Sent</button>
-    <button (click)="loadMessages('CATEGORY_ARCHIVED')" [disabled]="currentTab === 'CATEGORY_ARCHIVED'">Archived</button>
-    <button (click)="loadMessages('CATEGORY_TRASH')" [disabled]="currentTab === 'CATEGORY_TRASH'">Trash</button>
-  </div>
-
-  <div>
-    <button (click)="openCompose()">Compose</button>
-    <button (click)="logout()">Logout</button>
-    <button style="position: fixed; bottom: 20px; right: 20px;" (click)="openChat()">
-      💬 Chat
-    </button>
-    
-  </div>
-</div>  -->
-
-<!-- Compose Mail Form -->
-<!-- <div *ngIf="composeMode" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-  <h3>Compose Mail</h3>
-  <form (submit)="sendMail($event)">
-    <label>To:</label><br />
-    <input type="email" [(ngModel)]="composeData.to" name="to" required /><br />
-    <label>Subject:</label><br />
-    <input type="text" [(ngModel)]="composeData.subject" name="subject" /><br />
-    <label>Message:</label><br />
-    <textarea [(ngModel)]="composeData.body" name="body" rows="5"></textarea><br />
-    <button type="submit">Send</button>
-    <button type="button" (click)="composeMode = false">Cancel</button>
-  </form>
-</div> -->
-
-<!-- Message List -->
-
-<!-- <ul> --> <!--this should be uncommented-->
-  <!-- <li *ngFor="let message of messages" (click)="selectMessage(message)" style="cursor: pointer; margin-bottom: 10px;">
-    <strong>{{ getSubject(message) }}</strong><br />
-    <small>From: {{ getFrom(message) }}</small><br />
-    <span [innerHTML]="getSnippet(message)"></span>
-  </li> -->
-
-
-  <!-- <li *ngFor="let message of messages" 
-    [routerLink]="['/email', message.id]"
-    style="cursor: pointer; margin-bottom: 10px;">
-  <strong>{{ getSubject(message) }}</strong><br />
-  <small>From: {{ getFrom(message) }}</small><br />
-  <span [innerHTML]="getSnippet(message)"></span>
-</li>
-</ul>
-<div style="margin-top: 20px;">
-  <button (click)="loadPreviousPage()" [disabled]="previousPageTokens.length === 0">Previous</button>
-  <span>Page: {{ pageIndex + 1 }}</span>
-  <button (click)="loadNextPage()" [disabled]="!nextPageToken">Next</button>
-</div> -->
-
-<!-- Selected Message -->
-<!-- <div *ngIf="selectedMessage" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
-  <h3>{{ getSubject(selectedMessage) }}</h3>
-  <p><strong>From:</strong> {{ getFrom(selectedMessage) }}</p>
-  <div [innerHTML]="getBody(selectedMessage)"></div>
-  <button (click)="replyToMessage()">Reply</button>
-  <button (click)="deleteMessage()">Delete</button>
-  <button (click)="archiveMessage()">Archive</button>
-</div> -->
-
-
-
-
-
-
 <!--updated-->
 <div class="gmail-container">
   <!-- Header Section -->
   <header class="header">
     <div class="logo"><b>ProMail</b><span class="ai-text"><b>AI</b></span></div>
     <div class="search-bar">
-      <input type="text" placeholder="Search mail">
-      <button class="search-button">🔍</button>
+      <input [(ngModel)]="searchQuery" placeholder="Search mail">
+      <button (click)="searchMail()" class="search-button">🔍</button>
     </div>
     <div class="user-actions">
+      <button class="auto-reply-button" (click)="openAutoReplyScheduler()">Auto-Reply Scheduler</button>
       <button class="compose-button" (click)="openCompose()">Compose</button>
       <button class="logout-button" (click)="logout()">Logout</button>
     </div>
@@ -136,6 +61,16 @@
         
         </nav>
       
+        <div class="mb-3">
+          <button (click)="enableAutoReply()" [disabled]="autoReplyEnabled" class="btn btn-success">
+            Enable Auto-Reply
+          </button>
+          <button (click)="disableAutoReply()" [disabled]="!autoReplyEnabled" class="btn btn-danger">
+            Disable Auto-Reply
+          </button>
+        </div>
+        <p>Auto-Reply is: <strong>{{ autoReplyEnabled ? 'Enabled' : 'Disabled' }}</strong></p>
+
     </aside>
 
     <!-- Email List -->
@@ -208,20 +143,21 @@
       </div>
       <div class="email-body" [innerHTML]="getBody(selectedMessage)"></div>
       
-      <!-- Translation Section -->
-      <div class="translation-section">
-        <button class="action-button translate" 
-                (click)="translateEmail()" 
-                [disabled]="translating">
-          {{ translating ? 'Translating...' : 'Translate to English' }}
-        </button>
-        
-        <div *ngIf="translatedBody" class="translated-content">
-          <h4>Translated:</h4>
-          <div [innerHTML]="translatedBody"></div>
-        </div>
+      <!-- Language Selection and Translate -->
+      <div class="translate-controls">
+        <label for="languageSelect">Translate to:</label>
+        <select id="languageSelect" [(ngModel)]="selectedLanguage">
+          <option *ngFor="let lang of languages" [value]="lang.code">{{ lang.name }}</option>
+        </select>
+        <button class="translate-button" (click)="translateEmailContent()">Translate</button>
       </div>
-      
+
+      <!-- Translated Body -->
+      <div class="translated-body" *ngIf="translatedBody">
+        <h4>Translated Text:</h4>
+        <div class="translated-text">{{ translatedBody }}</div>
+      </div>
+
       <div class="email-actions">
         <button class="action-button reply" (click)="replyToMessage()">Reply</button>
         <button class="action-button delete" (click)="deleteMessage()">Delete</button>

@@ -105,7 +105,7 @@ export class GmailService {
     sessionStorage.clear();
   }
 
-  async listMessages(label: string,pageToken: string = ''): Promise<{ messages: any[]; nextPageToken?: string }> {
+  async listMessages(label: string,pageToken: string = '', query: string = ''): Promise<{ messages: any[]; nextPageToken?: string }> {
     if (!this.accessToken) {
       throw new Error('User is not authenticated.');
     }
@@ -125,7 +125,8 @@ export class GmailService {
       userId: 'me',
       maxResults: 5,
       labelIds,
-      pageToken
+      pageToken,
+      q: query
     });
 
     // return response.result.messages || [];
@@ -159,25 +160,55 @@ export class GmailService {
       document.body.appendChild(script);
     });
   }
-  async sendEmail(to: string, subject: string, body: string): Promise<void> {
+  async sendEmail(to: string, subject: string, body: string,inReplyTo?: string, threadId?: string): Promise<void> {
     console.log('📤 Sending email to:', to); 
 
-    const email =
+    let headers =
       `To: ${to}\r\n` +
       `Subject: ${subject}\r\n` +
-      `Content-Type: text/html; charset=UTF-8\r\n\r\n` +
-      `${body}`;
+      `Content-Type: text/html; charset=UTF-8\r\n`;
+
+    if (inReplyTo) {
+      headers += `In-Reply-To: ${inReplyTo}\r\n`;
+    }
   
-    const encodedEmail = btoa(email).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const emailContent = `${headers}\r\n${body}`;
+    console.log('emailContent',emailContent);
+    // const encodedEmail = btoa(emailContent)
+    // .replace(/\+/g, '-')
+    // .replace(/\//g, '_')
+    // .replace(/=+$/, '');
+    const encodedEmail = this.base64UrlEncodeUnicode(emailContent);
+    console.log('encodedEmail', encodedEmail);
+
+    const resource: any = {
+      raw: encodedEmail
+    };
   
+    if (threadId) {
+      resource.threadId = threadId;
+    }
+
     await gapi.client.gmail.users.messages.send({
       userId: 'me',
-      resource: {
-        raw: encodedEmail
-      }
+      resource
     });
+    console.log('✅ Email sent.');
+
   }
 
+  private base64UrlEncodeUnicode(str: string): string {
+    const utf8Bytes = new TextEncoder().encode(str);
+    let binary = '';
+    utf8Bytes.forEach(byte => {
+      binary += String.fromCharCode(byte);
+    });
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
+  
   async deleteMessage(messageId: string): Promise<void> {
     await gapi.client.gmail.users.messages.trash({
       userId: 'me',
@@ -214,4 +245,55 @@ export class GmailService {
   
     return { subject, snippet, id: message.id };
   }
+
+  async searchMessages(query: string): Promise<{ messages: any[]; nextPageToken?: string }> {
+    const response = await gapi.client.gmail.users.messages.list({
+      userId: 'me',
+      q: query,
+      maxResults: 10
+    });
+  
+    return {
+      messages: response.result.messages || [],
+      nextPageToken: response.result.nextPageToken
+    };
+  }
+
+  extractTextFromMessage(email: any): string {
+    const parts = email.payload.parts || [];
+    let body = '';
+    for (const part of parts) {
+      if (part.mimeType === 'text/plain' && part.body?.data) {
+        body = atob(part.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+        break;
+      }
+    }
+    return body;
+  }
+  
+  setAutoReplySchedule(startTime: string, endTime: string, message: string): Promise<void> {
+    const schedule = { startTime, endTime, message };
+    localStorage.setItem('autoReplySchedule', JSON.stringify(schedule));
+    return Promise.resolve(); // Replace with API logic if storing on server
+  }
+  
+  getAutoReplySchedule(): { startTime: string, endTime: string, message: string } | null {
+    const data = localStorage.getItem('autoReplySchedule');
+    return data ? JSON.parse(data) : null;
+  }
+
+  async findEmailBySubject(subjectQuery: string): Promise<any | null> {
+    const res = await gapi.client.gmail.users.messages.list({
+      userId: 'me',
+      q: `subject:"${subjectQuery}"`,
+      maxResults: 1
+    });
+  
+    const message = res.result.messages?.[0];
+    if (!message) return null;
+  
+    return this.getMessage(message.id);
+  }
+  
+  
 }

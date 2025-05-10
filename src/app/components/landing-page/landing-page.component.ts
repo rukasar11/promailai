@@ -23,7 +23,6 @@ export class LandingPageComponent {
   constructor(private router: Router) {}
 
   navigateToLogin() {
-    alert(1);
     this.router.navigate(['/login']);
   }
 }

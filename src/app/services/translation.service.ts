@@ -1,63 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
-})  
+})
 export class TranslationService {
+  // private apiUrl = '/translate';
 
-  constructor(private http: HttpClient) {}
+  // private apiUrl = 'https://api-free.deepl.com/v2/translate';  // DeepL API endpoint
+  // private apiKey = '01d25672-2d78-49ab-89e4-e00c70d6e3b0:fx';  // Store API key in environment file
+  private apiUrl = 'http://localhost:3000/translate';
 
-  // API_BASE = 'https://translate.argosopentech.com';
-  API_BASE = 'https://libretranslate.com'; // or any other working mirror
+  constructor(private http: HttpClient) { }
 
-  private readonly API_KEY = 'AIzaSyDTy97x1TudHyfTLAOXF3bXGPw4mbVZ510';
-
-  detectLanguage(text: string): Observable<any> {
-    // return this.http.post<any>('https://libretranslate.de/detect', {
-    //   q: text
-    // });
-    const cleanText = this.extractPlainTextFromHTML(text);
-    const rowtext = this.cleanText(cleanText);
-    const snippet = rowtext.substring(0, 300);
-    console.log('Detecting language from snippet:', snippet);
-    // return this.http.post<any>(`${this.API_BASE}/detect`, { q: rowtext });
-    const url = 'https://libretranslate.com/detect';
-    const body = {
-      q: snippet
+  translate(text: string, targetLang: string) {
+    const payload = {
+      text,
+      target_lang: targetLang,
     };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  
-    return this.http.post<any>(url, body, { headers });  
-  }
 
-  private extractPlainTextFromHTML(html: string): string {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
-  }
-
-  cleanText(rawText: string): string {
-    return rawText
-      .replace(/\n+/g, ' ')         // Replace newlines with space
-      .replace(/\s+/g, ' ')         // Collapse multiple spaces
-      .trim();                      // Trim leading/trailing spaces
-  }
-
-  translateToEnglish(text: string, sourceLang: string): Observable<any> {
-    // return this.http.post<any>('https://libretranslate.de/translate', {
-    //   q: text,
-    //   source: sourceLang,
-    //   target: 'en',
-    //   format: 'text'
-    // });
-    return this.http.post<any>(`${this.API_BASE}/translate`, {
-      q: text,
-      source: sourceLang,
-      target: 'en',
-      format: 'text'
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
-  }
 
+    const body = new URLSearchParams();
+    body.set('text', text);
+    body.set('target_lang', targetLang);
+
+    return this.http.post(this.apiUrl, body.toString(), { headers });
+  }
 }
