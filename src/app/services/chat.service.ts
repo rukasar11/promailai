@@ -25,24 +25,11 @@ export class ChatService {
     this.chatPopupSubject.next(true);
   }
 
-  // getMessages() {
-  //   return this.afs.collection('messages', ref => ref.orderBy('timestamp'))
-  //     .valueChanges();
-  // }
-
   getMessages() {
     const messagesRef = collection(this.firestore, 'messages');
     const messagesQuery = query(messagesRef, orderBy('timestamp'));
     return collectionData(messagesQuery, { idField: 'id' });
   }
-
-  // sendMessage(sender: string, text: string) {
-  //   return this.afs.collection('messages').add({
-  //     sender,
-  //     text,
-  //     timestamp: new Date()
-  //   });
-  // }
   
   sendMessage(sender: string, text: string) {
     const messagesRef = collection(this.firestore, 'messages');

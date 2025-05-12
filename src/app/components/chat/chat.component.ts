@@ -31,7 +31,8 @@ export class ChatComponent implements OnInit  {
               • <code>/archive-latest</code> – Archive your latest message<br>
               • <code>/latest-subject</code> – View the subject of your most recent email<br>
               • <code>/summarize</code> – Extract summary of latest email<br>
-              • <code>/summarize-subject 'Email Subject'</code> – Extract summary of Email Subject You mentioned<br>`
+              • <code>/summarize-subject 'Email Subject'</code> – Extract summary of Email Subject You mentioned<br>
+              • <code>/auto-reply-subject 'Email Subject'</code> – Auto-reply to email based on subject`
     });
   }
   
@@ -116,6 +117,15 @@ export class ChatComponent implements OnInit  {
         botReply = `🔎 Searching for: "${subjectQuery}"`;
         this.messages.push({ sender: 'SmartBot 🤖', text: botReply });
         botReply = await this.smartBot.summarizeEmailBySubject(subjectQuery);
+      }
+    } else if (text.toLowerCase().startsWith('/auto-reply-subject')) {
+      const subjectQuery = text.substring('/auto-reply-subject'.length).trim();
+      if (!subjectQuery) {
+        botReply = '❗ Please provide a subject. Usage: /auto-reply-subject Your Subject Here';
+      } else {
+        botReply = `✉️ Generating reply for: "${subjectQuery}"`;
+        this.messages.push({ sender: 'SmartBot 🤖', text: botReply });
+        botReply = await this.smartBot.autoReplyBySubject(subjectQuery);
       }
     } else {
       botReply = '🤖 Unknown command. Try: /check-mail, /auto-reply, /delete-latest, /archive-latest, /latest-subject, /summarize, /summarize-subject';
