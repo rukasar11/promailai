@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationService {
-  // private apiUrl = '/translate';
+  private apiUrl = 'http://localhost:3000/nvidia-chat';
+  private apiKey = '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'; // Replace with a secure environment variable
 
-  // private apiUrl = 'https://api-free.deepl.com/v2/translate';  // DeepL API endpoint
-  // private apiKey = '01d25672-2d78-49ab-89e4-e00c70d6e3b0:fx';  // Store API key in environment file
-  private apiUrl = 'http://localhost:3000/translate';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  translate(text: string, targetLang: string) {
-    const payload = {
-      text,
-      target_lang: targetLang,
-    };
+  translate(text: string, targetLang: string): Observable<any> {
+    alert(1);
+    const prompt = `Translate the following text to ${targetLang}:\n\n${text}`;
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${this.apiKey}`,
+      'Content-Type': 'application/json'
     });
+    alert(2);
+    const payload = {
+      model: 'google/gemma-7b', // or 'mistralai/mixtral-8x22b'
+      messages: [
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.3,
+      max_tokens: 1000
+    };
 
-    const body = new URLSearchParams();
-    body.set('text', text);
-    body.set('target_lang', targetLang);
-
-    return this.http.post(this.apiUrl, body.toString(), { headers });
+    return this.http.post(this.apiUrl, payload, { headers });
   }
 }
