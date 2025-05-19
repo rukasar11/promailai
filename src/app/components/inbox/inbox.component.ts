@@ -46,10 +46,26 @@ export class InboxComponent implements OnInit {
     { code: 'de', name: 'German' },
     { code: 'hi', name: 'Hindi' },
     { code: 'ar', name: 'Arabic' },
-    { code: 'zh', name: 'Chinese' },
+    { code: 'zh', name: 'Chinese (Simplified)' },
+    { code: 'zh-TW', name: 'Chinese (Traditional)' },
     { code: 'ru', name: 'Russian' },
-    // Add more as needed
-  ];
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'it', name: 'Italian' },
+    { code: 'nl', name: 'Dutch' },
+    { code: 'tr', name: 'Turkish' },
+    { code: 'pl', name: 'Polish' },
+    { code: 'sv', name: 'Swedish' },
+    { code: 'fi', name: 'Finnish' },
+    { code: 'no', name: 'Norwegian' },
+    { code: 'da', name: 'Danish' },
+    { code: 'uk', name: 'Ukrainian' },
+    { code: 'he', name: 'Hebrew' },
+    { code: 'id', name: 'Indonesian' },
+    { code: 'vi', name: 'Vietnamese' },
+    { code: 'th', name: 'Thai' }
+  ];  
   searchQuery: string = '';
   selectedLanguage = 'en';
   composeData = {
@@ -232,28 +248,57 @@ export class InboxComponent implements OnInit {
     console.log('plainText', plainText);
     console.log('this.selectedLanguage.toUpperCase()',this.selectedLanguage.toLowerCase());
     this.translating = true;
+    // this.translationService.translate(plainText, this.selectedLanguage.toLowerCase()).subscribe({
+    //   next: (response:any) => {
+    //     console.log('response',response);
+    //     const rawTranslatedText = response.translations[0].text || '(No translated text)';
+    //     const cleanedText = this.cleanTranslatedText(rawTranslatedText);
+    //     this.translatedBody =  cleanedText;
+    //     console.log('this.translatedBody',this.translatedBody);
+    //   },
+    //   error: (err) => {
+    //     console.error('❌ Translation Error:', err);
+    //     this.translatedBody = '(Unable to translate message)';
+    //     this.translating = false;
+    //   }
+    // });
     this.translationService.translate(plainText, this.selectedLanguage.toLowerCase()).subscribe({
-      next: (response:any) => {
-        console.log('response',response);
-        const rawTranslatedText = response.translations[0].text || '(No translated text)';
+      next: (response: any) => {
+        const rawTranslatedText = response?.choices?.[0]?.message?.content || '(No translated text)';
         const cleanedText = this.cleanTranslatedText(rawTranslatedText);
-        this.translatedBody =  cleanedText;
-        console.log('this.translatedBody',this.translatedBody);
+        this.translatedBody = cleanedText;
+        this.translating = false;
       },
       error: (err) => {
         console.error('❌ Translation Error:', err);
         this.translatedBody = '(Unable to translate message)';
         this.translating = false;
       }
-    });
+    });    
   }
 
   // Helper method
   stripHtml(html: string): string {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    return tempDiv.textContent || tempDiv.innerText || '';
+    if (!html) return '';
+  
+    return html
+      // Remove Word-style comments and definitions
+      .replace(/<!--[\s\S]*?-->/gi, '') // remove HTML comments
+      .replace(/<style[\s\S]*?<\/style>/gi, '') // remove style tags
+      .replace(/<[^>]+>/g, '') // remove all HTML tags
+      .replace(/\s+/g, ' ') // collapse whitespace
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&lt;/gi, '<')
+      .replace(/&gt;/gi, '>')
+      .trim();
   }
+  
+  // stripHtml(html: string): string {
+  //   const tempDiv = document.createElement('div');
+  //   tempDiv.innerHTML = html;
+  //   return tempDiv.textContent || tempDiv.innerText || '';
+  // }
 
 
   cleanTranslatedText(raw: string): string {
