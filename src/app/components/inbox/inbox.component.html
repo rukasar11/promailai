@@ -7,11 +7,27 @@
       <input [(ngModel)]="searchQuery" placeholder="Search mail">
       <button (click)="searchMail()" class="search-button">🔍</button>
     </div>
-    <div class="user-actions">
+    <!-- <div class="user-actions">
       <button class="auto-reply-button" (click)="openAutoReplyScheduler()">Auto-Reply Scheduler</button>
       <button class="compose-button" (click)="openCompose()">Compose</button>
       <button class="logout-button" (click)="logout()">Logout</button>
-    </div>
+    </div> -->
+
+ <div class="user-actions">
+    <button class="auto-reply-button" (click)="openAutoReplyScheduler()">
+      <span class="material-icons">schedule</span>
+      <span>Auto-Reply</span>
+    </button>
+    <button class="compose-button" (click)="openCompose()">
+      <span class="material-icons">edit</span>
+      <span>Compose</span>
+    </button>
+    <button class="logout-button" (click)="logout()">
+      <span class="material-icons">logout</span>
+      <span>Logout</span>
+    </button>
+  </div>
+
   </header>
 
   <!-- Main Content Area -->
@@ -41,36 +57,41 @@
         <button class="tab-button" 
         [class.active]="currentTab === 'CATEGORY_SENT'"
         (click)="loadMessages('CATEGORY_SENT')"> 
-        <span class="material-icons">Sent</span>
+        <span class="material-icons">send</span>
         <span>Sent</span>
         </button>
 
         <button class="tab-button" 
         [class.active]="currentTab === 'CATEGORY_ARCHIVED'"
         (click)="loadMessages('CATEGORY_ARCHIVED')"> 
-        <span class="material-icons">Archive</span>
+        <span class="material-icons">archive</span>
         <span>Archived</span>
         </button>
 
         <button class="tab-button" 
         [class.active]="currentTab === 'CATEGORY_TRASH'"
         (click)="loadMessages('CATEGORY_TRASH')">
-        <span class="material-icons">Trash</span>
+        <span class="material-icons">delete</span>
         <span>Trash</span>
         </button>
-        
-        </nav>
+      </nav>
       
-        <div class="mb-3">
-          <button (click)="enableAutoReply()" [disabled]="autoReplyEnabled" class="btn btn-success">
-            Enable Auto-Reply
+      <div class="auto-reply-section">
+        <div class="auto-reply-status">
+          <span class="status-label">Auto-Reply:</span>
+          <span class="status-indicator" [class.active]="autoReplyEnabled">
+            {{ autoReplyEnabled ? 'ON' : 'OFF' }}
+          </span>
+        </div>
+        <div class="auto-reply-buttons">
+          <button (click)="enableAutoReply()" [disabled]="autoReplyEnabled" class="btn-enable">
+            <span class="material-icons">toggle_on</span> Enable
           </button>
-          <button (click)="disableAutoReply()" [disabled]="!autoReplyEnabled" class="btn btn-danger">
-            Disable Auto-Reply
+          <button (click)="disableAutoReply()" [disabled]="!autoReplyEnabled" class="btn-disable">
+            <span class="material-icons">toggle_off</span> Disable
           </button>
         </div>
-        <p>Auto-Reply is: <strong>{{ autoReplyEnabled ? 'Enabled' : 'Disabled' }}</strong></p>
-
+      </div>
     </aside>
 
     <!-- Email List -->
@@ -135,7 +156,12 @@
     <!-- Email Detail View -->
     <section *ngIf="selectedMessage" class="email-detail">
       <div class="email-header">
-        <h2 class="email-subject">{{ getSubject(selectedMessage) }}</h2>
+        <div class="email-header-top">
+          <h2 class="email-subject">{{ getSubject(selectedMessage) }}</h2>
+          <button class="close-email-button" (click)="selectedMessage = null">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
         <div class="email-meta">
           <span class="sender">{{ getFrom(selectedMessage) }}</span>
           <span class="time">{{ getDate(selectedMessage) | date:'medium' }}</span>
@@ -144,18 +170,27 @@
       <div class="email-body" [innerHTML]="getBody(selectedMessage)"></div>
       
       <!-- Language Selection and Translate -->
-      <div class="translate-controls">
-        <label for="languageSelect">Translate to:</label>
-        <select id="languageSelect" [(ngModel)]="selectedLanguage">
-          <option *ngFor="let lang of languages" [value]="lang.code">{{ lang.name }}</option>
-        </select>
-        <button class="translate-button" (click)="translateEmailContent()">Translate</button>
-      </div>
-
-      <!-- Translated Body -->
-      <div class="translated-body" *ngIf="translatedBody">
-        <h4>Translated Text:</h4>
-        <div class="translated-text">{{ translatedBody }}</div>
+      <div class="translate-section">
+        <div class="translate-header">
+          <span class="material-icons">translate</span>
+          <h3>Translate Email</h3>
+        </div>
+        <div class="translate-controls">
+          <select id="languageSelect" [(ngModel)]="selectedLanguage" class="language-select">
+            <option value="" disabled selected>Select language</option>
+            <option *ngFor="let lang of languages" [value]="lang.code">{{ lang.name }}</option>
+          </select>
+          <button class="translate-button" (click)="translateEmailContent()">
+            <span class="material-icons">arrow_forward</span> Translate
+          </button>
+        </div>
+        <div class="translated-content" *ngIf="translatedBody">
+          <div class="translated-header">
+            <span class="material-icons">check_circle</span>
+            <h4>Translation Complete</h4>
+          </div>
+          <div class="translated-text">{{ translatedBody }}</div>
+        </div>
       </div>
 
       <div class="email-actions">
@@ -172,3 +207,5 @@
     <span class="chat-label">Chat</span>
   </button>
 </div>
+
+

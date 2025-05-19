@@ -1,4 +1,4 @@
-  <div class="chat-box">
+  <!-- <div class="chat-box">
     <div *ngFor="let msg of messages" [innerHTML]="msg.text" [ngClass]="{ 'bot': msg.sender === 'SmartBot 🤖', 'user': msg.sender !== 'SmartBot 🤖' }">
       <strong>{{ msg.sender }}:</strong>
     </div>
@@ -8,4 +8,56 @@
       <button (click)="send()">Send</button>
     </div>
   </div>
-  
+   -->
+<div class="chat-container">
+  <div class="chat-header">
+    <div class="chat-title">
+      <div class="bot-avatar">
+        <i class="fas fa-robot"></i>
+      </div>
+      <h2>SmartBot Assistant</h2>
+    </div>
+    <div class="header-controls">
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span>Online</span>
+      </div>
+      <button class="close-button" (click)="closeChat()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="chat-messages" #messagesContainer>
+    <div *ngFor="let msg of messages" class="message" [ngClass]="{ 'bot-message': msg.sender === 'SmartBot 🤖', 'user-message': msg.sender !== 'SmartBot 🤖' }">
+      <div class="message-avatar">
+        <i *ngIf="msg.sender === 'SmartBot 🤖'" class="fas fa-robot"></i>
+        <i *ngIf="msg.sender !== 'SmartBot 🤖'" class="fas fa-user"></i>
+      </div>
+      <div class="message-content">
+        <div class="message-sender">{{ msg.sender }}</div>
+        <div class="message-text" [innerHTML]="msg.text"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-container">
+    <div class="input-wrapper">
+      <input 
+        [(ngModel)]="messageText" 
+        placeholder="Type your message or command..." 
+        (keyup.enter)="send()"
+        class="message-input"
+      />
+      <button (click)="send()" class="send-button">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    <div class="quick-commands">
+      <span>Quick commands:</span>
+      <button (click)="messageText = '/check-mail'; send()">/check-mail</button>
+      <button (click)="messageText = '/auto-reply'; send()">/auto-reply</button>
+      <button (click)="messageText = '/summarize'; send()">/summarize</button>
+    </div>
+  </div>
+</div>
