@@ -472,5 +472,5 @@ export class InboxComponent implements OnInit {
     this.autoReplyEnabled = false;
     localStorage.setItem('autoReplyEnabled', 'false');
   }
-  
+    
 }
