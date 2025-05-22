@@ -27,15 +27,15 @@ export class ChatComponent implements OnInit, AfterViewChecked {
               How can I assist you today?<br><br>
               <strong>Try commands like:</strong><br>
               • <code>/check-mail</code> – Check your latest unread email<br>
-              • <code>/auto-reply</code> – Send a quick auto-response<br>
-              • <code>/delete-latest</code> – Delete the most recent email<br>
-              • <code>/archive-latest</code> – Archive your latest message<br>
               • <code>/latest-subject</code> – View the subject of your most recent email<br>
+              • <code>/archive-latest</code> – Archive your latest message<br>
+              • <code>/delete-latest</code> – Delete the most recent email<br>
               • <code>/summarize</code> – Extract summary of latest email<br>
               • <code>/summarize-subject 'Email Subject'</code> – Extract summary of Email Subject You mentioned<br>
+              • <code>/auto-reply</code> – Send a quick auto-response<br>
               • <code>/auto-reply-subject 'Email Subject'</code> – Auto-reply to email based on subject<br>
-              • <code>/reply-email</code> – Generate AI reply to latest email<br>
-              • <code>/reply-email-subject 'Email Subject'</code> – AI reply to email by subject`
+              • <code>/smart-reply-email</code> – Generate AI reply to latest email<br>
+              • <code>/smart-reply-email-subject 'Email Subject'</code> – AI reply to email by subject`
     });
   }
 
@@ -91,19 +91,24 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       if (!subjectQuery) {
         botReply = '❗ Please provide a subject. Usage: /auto-reply-subject Your Subject Here';
       } else {
-        botReply = `✉️ Generating reply for: "${subjectQuery}"`;
+        botReply = `✉️ Generating auto-reply for: "${subjectQuery}"`;
         this.messages.push({ sender: 'SmartBot 🤖', text: botReply });
         botReply = await this.smartBot.autoReplyBySubject(subjectQuery);
       }
-    } else if (text.toLowerCase() === '/reply-email') {
+    } else if (text.toLowerCase() === '/smart-reply-email') {
       botReply = '💬 Generating reply to your latest email...';
       this.messages.push({ sender: 'SmartBot 🤖', text: botReply });
-      botReply = await this.smartBot.replyToLatestEmailWithAI();
+      botReply = await this.smartBot.replyToLatestEmail();
 
-    } else if (text.toLowerCase().startsWith('/reply-email-subject')) {
-      const subjectQuery = text.substring('/reply-email-subject'.length).trim();
+    } else if (text.toLowerCase().startsWith('/smart-reply-email-subject')) {
+      const subjectQuery = text.substring('/smart-reply-email-subject'.length).trim();
+      console.log('subjectQuery',subjectQuery);
       if (!subjectQuery) {
         botReply = '❗ Please provide a subject. Usage: /reply-email-subject Your Subject Here';
+      } else {
+        botReply = `✉️ Generating reply for: "${subjectQuery}"`;
+        this.messages.push({ sender: 'SmartBot 🤖', text: botReply });
+        botReply = await this.smartBot.replyToEmail(subjectQuery);
       }
     } else {
       botReply = '🤖 Unknown command. Try: /check-mail, /auto-reply, /delete-latest, /archive-latest, /latest-subject, /summarize, /summarize-subject';
